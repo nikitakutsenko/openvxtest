@@ -1,4 +1,4 @@
-find_package(OpenCV REQUIRED PATHS "/home/nikita/OpenVX_MIET/vcpkg/installed/x64-linux/share/opencv/")
+find_package(OpenCV REQUIRED)
 
 
 file(GLOB SRCS Kernels/*.cpp)

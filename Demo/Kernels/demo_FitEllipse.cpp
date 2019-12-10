@@ -55,7 +55,7 @@ void demo_FitEllipse::execute()
    cv::namedWindow(m_openCVWindow,      CV_WINDOW_NORMAL);
    cv::namedWindow(m_diffWindow,        CV_WINDOW_NORMAL);
 
-   const std::string imgPath = "/home/nikita/OpenVX_MIET/openvxtest/Image/apple.png";
+   const std::string imgPath = "../Image/apple.png";
    m_srcImage = cv::imread(imgPath, CV_LOAD_IMAGE_GRAYSCALE);
    cv::resize(m_srcImage, m_srcImage, cv::Size(500, 500), 0, 0, CV_INTER_LINEAR);
    cv::imshow(m_originalWindow, m_srcImage);
