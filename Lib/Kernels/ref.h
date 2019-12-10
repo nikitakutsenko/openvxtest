@@ -242,7 +242,7 @@ vx_status ref_Threshold(const vx_image src_image, vx_image dst_image, const vx_t
         VX_SUCCESS          - в случае успешного завершения;
         VX_ERROR_INVALID_PARAMETERS - в случае некорректных данных.       
 */
-// ref_FitEllipse
+vx_status ref_FitEllipse(vx_array xpnts, vx_array ypnts, vx_array box);
 
 /*
     Function: ref_FitLine

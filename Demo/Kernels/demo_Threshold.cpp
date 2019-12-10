@@ -62,8 +62,9 @@ void demo_Threshold::execute()
    cv::namedWindow(m_openCVWindow, CV_WINDOW_NORMAL);
    cv::namedWindow(m_diffWindow, CV_WINDOW_NORMAL);
 
-   const std::string imgPath = "../Image/Solvay_conference_1927.png";
+   const std::string imgPath = "/home/nikita/OpenVX_MIET/openvxtest/Image/Solvay_conference_1927.png";
    m_srcImage = cv::imread(imgPath, CV_LOAD_IMAGE_GRAYSCALE);
+   cv::resize(m_srcImage, m_srcImage, cv::Size(200, 200), 0, 0, CV_INTER_LINEAR);
    cv::imshow(m_originalWindow, m_srcImage);
 
    cv::createTrackbar("Threshold:", m_originalWindow, &m_threshold, 255, applyParameters, static_cast<void*>(this));
