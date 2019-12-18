@@ -55,9 +55,9 @@ void demo_FitEllipse::execute()
    cv::namedWindow(m_openCVWindow,      CV_WINDOW_NORMAL);
    cv::namedWindow(m_diffWindow,        CV_WINDOW_NORMAL);
 
-   const std::string imgPath = "../Image/apple.png";
+   const std::string imgPath = "/home/nikita/OpenVX_MIET/openvxtest/Image/apple.png";
    m_srcImage = cv::imread(imgPath, CV_LOAD_IMAGE_GRAYSCALE);
-   cv::resize(m_srcImage, m_srcImage, cv::Size(500, 500), 0, 0, CV_INTER_LINEAR);
+   cv::resize(m_srcImage, m_srcImage, cv::Size(300, 300), 0, 0, CV_INTER_LINEAR);
    cv::imshow(m_originalWindow, m_srcImage);
 
    applyParameters(this);
@@ -71,9 +71,13 @@ void demo_FitEllipse::applyParameters(void* data) {
     const cv::Size imgSize(demo->m_srcImage.cols, demo->m_srcImage.rows);
 
     ///@{ OPENCV
+
     cv::Mat cvImage = cv::Mat::zeros(demo -> m_srcImage.size(), CV_8UC1), binImage;
 
     cv::Canny(demo -> m_srcImage, binImage, 50, 200, 3);
+
+
+
     vector<vector<Point>> contours;
 
     cv::findContours(binImage, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
@@ -91,12 +95,13 @@ void demo_FitEllipse::applyParameters(void* data) {
 
 
     ///@{ OPENVX
-    cv::Mat vxImage = cv::Mat::zeros(demo->m_srcImage.size(), CV_8UC1);
 
-    double scale = 1;
+    cv::Mat vxImage = cv::Mat::zeros(imgSize, CV_8UC1);
 
+    int f = 0;
 	for (size_t i = 0; i < contours.size(); i++) {
         if (contours[i].size() >= 5) {
+            f++;
             _vx_array box_, xs, ys;
             
             box_.size = 5;
@@ -113,29 +118,29 @@ void demo_FitEllipse::applyParameters(void* data) {
             vx_float32 * _ys = new vx_float32[contours[i].size()];
 
             for (int j = 0; j < contours[i].size(); j++){
-                _xs[j] = (vx_float32) contours[i][j].x / scale;
-                _ys[j] = (vx_float32) contours[i][j].y / scale;
+                _xs[j] = (vx_float32) contours[i][j].x;
+                _ys[j] = (vx_float32) contours[i][j].y;
             }
 
             xs.data = _xs;
             ys.data = _ys;
 
 		    vx_status st = ref_FitEllipse(&xs, &ys, &box_);
+
             if (st == VX_SUCCESS) {
-                vx_float32 * bb = (vx_float32*) box_.data; 
+                vx_float32 * bb = (vx_float32*) box_.data;
+
                 cv::RotatedRect box(
                     cv::Point2f(bb[0], bb[1]), 
                     cv::Size2f (bb[2], bb[3]), 
                     bb[4]
                 );
-
                 cv::ellipse(vxImage, box, Scalar(255, 255, 255));
             }
         }
     }
 
     cv::imshow(m_openVXWindow, vxImage);
-    
     ///@}
     
     
